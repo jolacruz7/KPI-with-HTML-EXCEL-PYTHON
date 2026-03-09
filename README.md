@@ -154,7 +154,3 @@ Proyecto personal / portafolio. Los datos mostrados son ficticios.
 
 ---
 
-*Desarrollado con asistencia de Claude (Anthropic) · 2026*
-git remote add origin https://github.com/jolacruz7/github-repo.git
-git branch -M main
-git push -u origin main
