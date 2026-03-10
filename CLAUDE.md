@@ -7,35 +7,39 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Comandos principales
 
 ```bash
-# Actualizar el HTML del reporte con nuevos datos del Excel
-python scripts/update_html.py
+# Generar el reporte HTML (desde la carpeta del proyecto)
+python Generar_Reporte_HTML.py
 
 # Instalar dependencias
-pip install openpyxl
+pip install pandas openpyxl python-docx
 ```
 
-El script lee `Movimientos_Consignacion.xlsx` (hoja `Principal`) y actualiza en el HTML existente (`reporte/Reporte_Demo.html`) el tbody de la tabla, los KPIs, los datasets de Chart.js y la fecha de actualización.
+El script genera `Reporte_Consignacion_Mullerk.html` y actualiza `Historico_Reportes_Mullerk.csv`.
 
-**Contraseña del demo:** `demo1234`
+**Antes de cada ejecución, actualizar en `Generar_Reporte_HTML.py`:**
+- `ABONADO` — monto total abonado al período actual
+- `PERIODO` — ej. `"Marzo 2026"`
+- `FACTURAS` — lista de facturas activas con número, fecha de emisión, vencimiento y monto
 
 ---
 
 ## Arquitectura
 
-Este repo es la versión demo/portafolio del sistema. A diferencia del proyecto real, usa `scripts/update_html.py` que **parchea** el HTML existente en lugar de regenerarlo desde cero.
-
 **Flujo de datos:**
 ```
-Movimientos_Consignacion.xlsx (hoja Principal)
-        │
-        ▼
-scripts/update_html.py  ──►  reporte/Reporte_Demo.html  (autocontenido, sin servidor)
+Movimientos_Consignacion_Mullerk.xlsx (hoja Principal)  ┐
+                                                          ├─► Generar_Reporte_HTML.py ─► Reporte_Consignacion_Mullerk.html
+Inventario_General_Mullerk.xlsx (hoja Inventario)       ┘
 ```
 
-- El HTML es autocontenido: logos en base64, Chart.js desde CDN
-- La autenticación usa SHA-256 client-side (contraseña configurable en el script)
-- Los dos Excel del proyecto real se unen por `CODIGO` (`MK-XXXXX`); aquí solo se usa el de movimientos
-- `plantillas/Conteo_Fisico_Template.xlsx` — columna D: stock sistema (pre-llenado), columna E: conteo físico (manual), columna F: diferencia (calculada)
+- Los dos Excel se unen por la clave `CODIGO` (formato `MK-XXXXX`)
+- El HTML resultante es autocontenido: logos en base64, Chart.js desde CDN, sin servidor
+- El acceso al reporte usa SHA-256 del lado del cliente (contraseña en `PASSWORD`)
+- `github-repo/scripts/update_html.py` es una versión alternativa que parchea el HTML existente en lugar de regenerarlo desde cero — repositorio: `https://github.com/jolacruz7/KPI-with-HTML-EXCEL-PYTHON.git`
+
+**Categorías de productos** — se asignan automáticamente por palabras clave en la descripción: INOX, GALVANIZADA, EMT, CINTA, MANGUERA, CAJETI, TIE WRAP / TW-.
+
+**Publicación:** El HTML se sube manualmente a Netlify Drop → `https://app.netlify.com/sites/reporteconsignacionmullerk/deploys`
 
 ---
 
