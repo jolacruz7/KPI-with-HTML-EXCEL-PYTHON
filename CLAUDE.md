@@ -1,5 +1,45 @@
-# CLAUDE.md — Proyecto Mullerk
-## Analista de Datos Funcional · Multisuministros Tambotorca
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+---
+
+## Comandos principales
+
+```bash
+# Actualizar el HTML del reporte con nuevos datos del Excel
+python scripts/update_html.py
+
+# Instalar dependencias
+pip install openpyxl
+```
+
+El script lee `Movimientos_Consignacion.xlsx` (hoja `Principal`) y actualiza en el HTML existente (`reporte/Reporte_Demo.html`) el tbody de la tabla, los KPIs, los datasets de Chart.js y la fecha de actualización.
+
+**Contraseña del demo:** `demo1234`
+
+---
+
+## Arquitectura
+
+Este repo es la versión demo/portafolio del sistema. A diferencia del proyecto real, usa `scripts/update_html.py` que **parchea** el HTML existente en lugar de regenerarlo desde cero.
+
+**Flujo de datos:**
+```
+Movimientos_Consignacion.xlsx (hoja Principal)
+        │
+        ▼
+scripts/update_html.py  ──►  reporte/Reporte_Demo.html  (autocontenido, sin servidor)
+```
+
+- El HTML es autocontenido: logos en base64, Chart.js desde CDN
+- La autenticación usa SHA-256 client-side (contraseña configurable en el script)
+- Los dos Excel del proyecto real se unen por `CODIGO` (`MK-XXXXX`); aquí solo se usa el de movimientos
+- `plantillas/Conteo_Fisico_Template.xlsx` — columna D: stock sistema (pre-llenado), columna E: conteo físico (manual), columna F: diferencia (calculada)
+
+---
+
+## Proyecto Mullerk — Analista de Datos Funcional · Multisuministros Tambotorca
 
 ---
 
